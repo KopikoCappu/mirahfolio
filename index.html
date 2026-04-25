@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mirah Blanchard — Engineering Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Share+Tech+Mono&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Oswald:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper:       #F2ECD8;
+      --paper-2:     #EDE6D0;
+      --paper-3:     #F7F2E4;
+      --paper-4:     #E8E0C8;
+      --ink:         #1A1410;
+      --ink-dim:     rgba(26, 20, 16, 0.62);
+      --ink-faint:   rgba(26, 20, 16, 0.10);
+      --ink-rule:    rgba(26, 20, 16, 0.08);
+      --pencil:      rgba(26, 20, 16, 0.72);
+      --pencil-dim:  rgba(26, 20, 16, 0.48);
+      --red:         #C0392B;
+      --red-dim:     rgba(192, 57, 43, 0.18);
+      --blue:        #2C5F8A;
+      --blue-dim:    rgba(44, 95, 138, 0.12);
+      --grid-color:  rgba(26, 20, 16, 0.055);
+      --grid-major:  rgba(26, 20, 16, 0.095);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Libre Baskerville', Georgia, serif;
+      background-color: var(--paper);
+      color: var(--ink);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      cursor: crosshair;
+    }
+
+    /* ── PAPER GRAIN ─────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.06;
+      pointer-events: none;
+      z-index: 9000;
+    }
+
+    /* ── ENGINEERING GRID ────────────────────────── */
+    .grid-bg {
+      position: fixed; inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        linear-gradient(var(--grid-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px),
+        linear-gradient(var(--grid-major) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-major) 1px, transparent 1px);
+      background-size: 20px 20px, 20px 20px, 100px 100px, 100px 100px;
+    }
+
+    /* ── NAV ─────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 500;
+      padding: 0 56px;
+      height: 58px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid transparent;
+      transition: background 0.35s, border-color 0.35s;
+    }
+    nav.scrolled {
+      background: rgba(242, 236, 216, 0.96);
+      backdrop-filter: blur(8px);
+      border-bottom-color: var(--ink-faint);
+    }
+    .nav-id {
+      display: flex; align-items: baseline; gap: 14px;
+      text-decoration: none;
+    }
+    .nav-name {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 500; font-size: 15px;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--ink);
+    }
+    .nav-spec {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px; color: var(--ink-dim);
+      letter-spacing: 0.05em;
+    }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--ink-dim);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--red); }
+
+    /* ── SHARED LAYOUT ───────────────────────────── */
+    section { position: relative; z-index: 1; }
+
+    .eyebrow {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--ink-dim);
+      margin-bottom: 6px;
+    }
+    .section-heading {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 400; font-size: clamp(36px, 4.5vw, 56px);
+      letter-spacing: 0.04em; text-transform: uppercase;
+      line-height: 1; color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .heading-rule {
+      width: 100%; height: 1px;
+      background: var(--ink);
+      margin-bottom: 52px;
+      position: relative;
+    }
+    .heading-rule::before {
+      content: attr(data-rev);
+      position: absolute; right: 0; top: -18px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px; color: var(--ink-dim);
+      letter-spacing: 0.08em;
+    }
+
+    /* ── TITLE BLOCK ─────────────────────────────── */
+    .title-block {
+      position: absolute;
+      border: 1px solid var(--pencil-dim);
+      font-family: 'Share Tech Mono', monospace;
+    }
+    .title-block-cell {
+      padding: 4px 8px;
+      border-bottom: 1px solid var(--pencil-dim);
+      border-right: 1px solid var(--pencil-dim);
+    }
+    .title-block-cell:last-child { border-bottom: none; }
+    .tbc-label { font-size: 7px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-dim); }
+    .tbc-value { font-size: 11px; color: var(--ink); margin-top: 2px; }
+
+    /* ── DIMENSION ANNOTATION ────────────────────── */
+    .dim-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px; color: var(--pencil-dim);
+      position: absolute; white-space: nowrap;
+      letter-spacing: 0.05em;
+    }
+    .tolerance {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px; color: var(--red);
+      white-space: nowrap; letter-spacing: 0.04em;
+    }
+
+    /* ── PENCIL UNDERLINE ────────────────────────── */
+    .pencil-under {
+      position: relative; display: inline-block;
+    }
+    .pencil-under::after {
+      content: '';
+      position: absolute; left: 0; right: 0; bottom: -2px;
+      height: 1px;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--pencil) 0px, var(--pencil) 3px,
+        transparent 3px, transparent 5px
+      );
+    }
+
+    /* ── HERO ────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      padding: 130px 590px 210px;
+      display: flex; align-items: flex-end;
+      position: relative; overflow: hidden;
+    }
+
+    /* Large ghost cross-hairs in background */
+    .crosshair-bg {
+      position: absolute;
+      pointer-events: none; z-index: 0;
+    }
+    .crosshair-bg svg { opacity: 0.065; }
+
+    /* Profile geometry drawing top-right */
+    .hero-drawing {
+      position: absolute;
+      right: 420px; top: 50%;
+      transform: translateY(-50%);
+      width: clamp(280px, 36vw, 480px);
+      z-index: 1; pointer-events: none;
+    }
+
+    .hero-content { position: relative; z-index: 2; max-width: 720px; }
+
+    .hero-eyebrow {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--ink-dim);
+      margin-bottom: 28px;
+      margin-left: 11px;
+      opacity: 0; animation: fadeUp 0.7s ease 0.2s both;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .hero-eyebrow::before {
+      content: ''; width: 32px; height: 1px;
+      background: var(--red); flex-shrink: 0;
+    }
+
+    .hero-name {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 600;
+      font-size: clamp(68px, 12vw, 148px);
+      line-height: 0.88;
+      letter-spacing: -0.01em;
+      text-transform: uppercase;
+      color: var(--ink);
+      opacity: 0; animation: fadeUp 0.9s ease 0.35s both;
+      position: relative;
+    }
+
+    .hero-name-ghost {
+      display: block;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(26,20,16,0.80);
+    }
+
+    .hero-sub {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px; letter-spacing: 0.28em;
+      text-transform: uppercase; color: var(--ink-dim);
+      margin-top: 18px; margin-bottom: 44px;
+      opacity: 0; animation: fadeUp 0.8s ease 0.6s both;
+      margin-left: 11px;
+    }
+
+    .hero-specs {
+      display: flex; gap: 0;
+      border: 1px solid var(--pencil-dim);
+      opacity: 0; animation: fadeUp 0.8s ease 0.8s both;
+      max-width: 700px;
+        margin-left: 11px;
+
+    }
+    .spec-cell {
+      flex: 1;
+      padding: 14px 22px;
+      border-right: 1px solid var(--pencil-dim);
+    }
+    .spec-cell:last-child { border-right: none; }
+    .spec-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 8px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--ink-dim);
+      margin-bottom: 5px;
+    }
+    .spec-value {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 400; font-size: 15px;
+      letter-spacing: 0.06em; color: var(--ink);
+    }
+    .spec-tol {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px; color: var(--red);
+      margin-top: 2px;
+    }
+
+    /* corner marks */
+    .corner-mark {
+      position: absolute;
+      width: 16px; height: 16px;
+      border-color: var(--pencil-dim);
+      border-style: solid;
+    }
+    .corner-mark.tl { top: 0; left: 0; border-width: 1px 0 0 1px; }
+    .corner-mark.tr { top: 0; right: 0; border-width: 1px 1px 0 0; }
+    .corner-mark.bl { bottom: 0; left: 0; border-width: 0 0 1px 1px; }
+    .corner-mark.br { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
+
+    .hero-revision {
+      position: absolute; bottom: 32px; right: 56px;
+      z-index: 2;
+      opacity: 0; animation: fadeIn 1s ease 1.2s both;
+    }
+    .revision-table {
+      border: 1px solid var(--pencil-dim);
+      border-collapse: collapse;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px;
+    }
+    .revision-table th, .revision-table td {
+      padding: 4px 10px;
+      border: 1px solid var(--pencil-dim);
+      color: var(--ink-dim);
+      text-align: left;
+      letter-spacing: 0.08em;
+    }
+    .revision-table th { font-size: 7px; text-transform: uppercase; background: var(--ink-faint); }
+    .revision-table td.red { color: var(--red); }
+
+    .hero-scroll {
+      position: absolute; bottom: 36px; left: 56px;
+      z-index: 2;
+      display: flex; align-items: center; gap: 12px;
+      opacity: 0; animation: fadeIn 0.8s ease 1.4s both;
+      cursor: pointer;
+    }
+    .scroll-arrow {
+      width: 20px; height: 20px;
+      border: 1px solid var(--pencil-dim);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .scroll-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--ink-dim);
+    }
+
+    /* ── ABOUT ───────────────────────────────────── */
+    #about {
+      padding: 100px 56px 100px;
+      background: var(--paper-2);
+      border-top: 1px solid var(--ink-faint);
+      border-bottom: 1px solid var(--ink-faint);
+    }
+    .about-grid {
+      max-width: 1140px; margin: 0 auto;
+      display: grid; grid-template-columns: 340px 1fr;
+      gap: 80px; align-items: start;
+    }
+
+    /* Portrait frame — engineering drawing style */
+    .portrait-wrap { position: relative; }
+    .portrait-frame {
+      border: 1px solid var(--pencil-dim);
+      aspect-ratio: 3/4;
+      background: var(--paper-3);
+      position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .portrait-placeholder {
+      text-align: center;
+    }
+    .portrait-placeholder .big-initial {
+      font-family: 'Oswald', sans-serif;
+      font-size: 120px; font-weight: 300;
+      color: var(--ink-faint); line-height: 1;
+      display: block; letter-spacing: 0.08em;
+    }
+    .portrait-placeholder .small-tag {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px; color: var(--pencil-dim);
+      letter-spacing: 0.18em; text-transform: uppercase;
+    }
+
+    /* dimension lines around portrait */
+    .portrait-dim-h {
+      position: absolute; bottom: -32px; left: 0; right: 0;
+      display: flex; align-items: center; gap: 0;
+    }
+    .dim-line { flex: 1; height: 1px; background: var(--pencil-dim); }
+    .dim-tick-l, .dim-tick-r {
+      width: 1px; height: 8px; background: var(--pencil-dim); flex-shrink: 0;
+    }
+    .dim-center {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px; color: var(--pencil-dim);
+      padding: 0 8px; white-space: nowrap;
+    }
+    .portrait-dim-v {
+      position: absolute; right: -38px; top: 0; bottom: 0;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .dim-line-v { flex: 1; width: 1px; background: var(--pencil-dim); }
+    .dim-center-v {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px; color: var(--pencil-dim);
+      writing-mode: vertical-rl; padding: 8px 0;
+      white-space: nowrap;
+    }
+
+    .about-bio p {
+      font-size: 18px; line-height: 1.85;
+      color: rgba(26,20,16,0.82);
+      margin-bottom: 22px;
+    }
+    .about-bio p em { font-style: italic; color: var(--ink); }
+
+    /* Spec table */
+    .spec-table {
+      width: 100%; border-collapse: collapse;
+      margin: 32px 0; font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+    }
+    .spec-table th {
+      text-align: left; font-size: 8px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--ink-dim);
+      padding: 6px 0; border-bottom: 1px solid var(--ink);
+    }
+    .spec-table td {
+      padding: 9px 0 9px 0;
+      border-bottom: 1px solid var(--ink-rule);
+      vertical-align: top;
+    }
+    .spec-table td:first-child { color: var(--ink-dim); width: 130px; }
+    .spec-table td:nth-child(2) { color: var(--ink); }
+    .spec-table td:nth-child(3) { color: var(--red); text-align: right; font-size: 9px; }
+
+    /* Skill bars — drawn with pencil style */
+    .skills-wrap { margin-top: 32px; }
+    .skill-row { margin-bottom: 14px; }
+    .skill-head {
+      display: flex; justify-content: space-between;
+      margin-bottom: 5px;
+    }
+    .skill-name {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--ink-dim);
+    }
+    .skill-val {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px; color: var(--red);
+    }
+    .skill-track {
+      height: 6px; background: var(--ink-faint);
+      border: 1px solid var(--pencil-dim);
+      position: relative; overflow: hidden;
+    }
+    .skill-fill {
+      position: absolute; left: 0; top: 0; bottom: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--ink) 0px, var(--ink) 2px,
+        transparent 2px, transparent 4px
+      );
+      transition: width 1s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    /* ── EXPERIENCE ──────────────────────────────── */
+    #experience { padding: 100px 56px 100px; }
+    .exp-inner { max-width: 900px; margin: 0 auto; }
+
+    .timeline { position: relative; padding-left: 60px; }
+    .timeline::before {
+      content: '';
+      position: absolute; left: 14px; top: 8px; bottom: 8px;
+      width: 1px; background: var(--pencil-dim);
+    }
+    .t-entry { position: relative; padding-bottom: 60px; }
+    .t-entry:last-child { padding-bottom: 0; }
+
+    /* node circle */
+    .t-node {
+      position: absolute; left: -50px; top: 8px;
+      width: 13px; height: 13px; border-radius: 50%;
+      border: 1px solid var(--pencil-dim);
+      background: var(--paper);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .t-node.live { border-color: var(--red); background: var(--red); }
+    .t-node-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--pencil-dim); }
+    .t-node.live .t-node-dot { background: var(--paper); }
+
+    .t-period {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px; letter-spacing: 0.14em;
+      color: var(--ink-dim); margin-bottom: 8px;
+    }
+    .t-role {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 500; font-size: clamp(20px, 2.4vw, 28px);
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .t-org {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic; font-size: 15px;
+      color: var(--blue); margin-bottom: 14px;
+    }
+    .t-desc {
+      font-size: 16px; line-height: 1.8;
+      color: rgba(26,20,16,0.78); max-width: 620px;
+      margin-bottom: 14px;
+    }
+    .t-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .t-tag {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--ink-dim);
+      border: 1px solid var(--pencil-dim);
+      padding: 3px 10px;
+    }
+
+    /* callout annotation */
+    .callout-note {
+      position: absolute; right: 0; top: 0;
+      border: 1px solid var(--pencil-dim);
+      padding: 10px 14px; max-width: 220px;
+    }
+    .callout-note::before {
+      content: '';
+      position: absolute; left: -30px; top: 50%;
+      width: 29px; height: 1px; background: var(--pencil-dim);
+    }
+    .callout-text {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px; line-height: 1.6;
+      color: var(--pencil-dim); letter-spacing: 0.06em;
+    }
+    .callout-red { color: var(--red); }
+
+    /* ── PROJECTS ────────────────────────────────── */
+    #projects {
+      padding: 100px 56px 100px;
+      background: var(--paper-2);
+      border-top: 1px solid var(--ink-faint);
+      border-bottom: 1px solid var(--ink-faint);
+    }
+    .proj-wrap { max-width: 1140px; margin: 0 auto; }
+
+    .proj-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border: 1px solid var(--pencil-dim);
+    }
+    .proj-card {
+      padding: 32px 28px;
+      border-right: 1px solid var(--pencil-dim);
+      border-bottom: 1px solid var(--pencil-dim);
+      position: relative;
+      transition: background 0.25s;
+    }
+    .proj-card:nth-child(3n) { border-right: none; }
+    .proj-card:nth-last-child(-n+3) { border-bottom: none; }
+    .proj-card:hover { background: var(--paper-3); }
+
+    .proj-drawing {
+      height: 120px; margin-bottom: 20px;
+      border: 1px solid var(--ink-faint);
+      position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--paper-3);
+    }
+    .proj-num {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px; letter-spacing: 0.2em;
+      color: var(--ink-faint); margin-bottom: 8px;
+    }
+    .proj-title {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 500; font-size: 20px;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .proj-cat {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--red);
+      margin-bottom: 12px;
+    }
+    .proj-desc {
+      font-size: 14px; line-height: 1.72;
+      color: rgba(26,20,16,0.75); margin-bottom: 14px;
+    }
+    .proj-tol {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px; color: var(--blue);
+      border-top: 1px solid var(--ink-rule);
+      padding-top: 10px; letter-spacing: 0.06em;
+    }
+
+    /* featured project row */
+    .proj-featured-row {
+      display: grid; grid-template-columns: 1.2fr 1fr;
+      border: 1px solid var(--pencil-dim);
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+    .proj-featured-drawing {
+      border-right: 1px solid var(--pencil-dim);
+      padding: 32px; background: var(--paper-3);
+      display: flex; align-items: center; justify-content: center;
+      min-height: 260px; position: relative;
+    }
+    .proj-featured-content { padding: 32px; position: relative; }
+    .proj-featured-content .proj-title { font-size: 28px; }
+
+    /* ── CONTACT ─────────────────────────────────── */
+    #contact { padding: 120px 56px 100px; position: relative; overflow: hidden; }
+    .contact-inner { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
+
+    .contact-heading {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 600; font-size: clamp(56px, 10vw, 120px);
+      text-transform: uppercase; letter-spacing: 0.02em;
+      line-height: 0.9; color: var(--ink);
+      margin-bottom: 16px;
+    }
+    .contact-heading span {
+      display: block; color: transparent;
+      -webkit-text-stroke: 1px rgba(26,20,16,0.2);
+    }
+    .contact-body {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic; font-size: 18px;
+      line-height: 1.78; color: rgba(26,20,16,0.75);
+      max-width: 480px; margin: 24px 0 44px;
+    }
+    .contact-ctas { display: flex; gap: 0; }
+    .cta-primary {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--ink); color: var(--paper);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px; letter-spacing: 0.22em;
+      text-transform: uppercase; padding: 14px 28px;
+      text-decoration: none; border: 1px solid var(--ink);
+      transition: background 0.2s, color 0.2s;
+    }
+    .cta-primary:hover { background: var(--red); border-color: var(--red); }
+    .cta-secondary {
+      display: inline-flex; align-items: center; gap: 10px;
+      border: 1px solid var(--pencil-dim); border-left: none;
+      color: var(--ink-dim);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px; letter-spacing: 0.22em;
+      text-transform: uppercase; padding: 14px 22px;
+      text-decoration: none; transition: color 0.2s, border-color 0.2s;
+    }
+    .cta-secondary:hover { color: var(--red); border-color: var(--red); }
+
+    /* bg ghost text */
+    .contact-ghost {
+      position: absolute; right: -2%; bottom: -8%;
+      font-family: 'Oswald', sans-serif; font-weight: 600;
+      font-size: 360px; line-height: 1;
+      color: transparent;
+      -webkit-text-stroke: 1px var(--ink-faint);
+      pointer-events: none; user-select: none; z-index: 0;
+    }
+
+    /* ── FOOTER ──────────────────────────────────── */
+    footer {
+      padding: 18px 56px;
+      border-top: 1px solid var(--ink-faint);
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 10px;
+      position: relative; z-index: 1;
+    }
+    .footer-id {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--ink-dim);
+    }
+    .footer-links { display: flex; gap: 24px; list-style: none; }
+    .footer-links a {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--ink-dim);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--red); }
+
+    /* ── ANIMATIONS ──────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes drawLine {
+      from { stroke-dashoffset: 1000; }
+      to   { stroke-dashoffset: 0; }
+    }
+
+    .reveal {
+      opacity: 0; transform: translateY(18px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-d1 { transition-delay: 0.1s; }
+    .reveal-d2 { transition-delay: 0.2s; }
+    .reveal-d3 { transition-delay: 0.3s; }
+
+    /* ── RESPONSIVE ──────────────────────────────── */
+    @media (max-width: 1000px) {
+      nav, #hero, #about, #experience, #projects, #contact, footer { padding-left: 24px; padding-right: 24px; }
+      .about-grid { grid-template-columns: 1fr; }
+      .proj-grid { grid-template-columns: 1fr; }
+      .proj-card { border-right: none; }
+      .proj-featured-row { grid-template-columns: 1fr; }
+      .proj-featured-drawing { border-right: none; border-bottom: 1px solid var(--pencil-dim); }
+      .hero-drawing { display: none; }
+      .callout-note { display: none; }
+    }
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .hero-specs { flex-direction: column; }
+      .spec-cell { border-right: none; border-bottom: 1px solid var(--pencil-dim); }
+      .contact-ctas { flex-direction: column; }
+      .cta-secondary { border-left: 1px solid var(--pencil-dim); }
+      footer { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<!-- ── NAV ─────────────────────────────────── -->
+<nav id="main-nav">
+  <a href="#hero" class="nav-id">
+    <span class="nav-name">Mirah Blanchard</span>
+    <span class="nav-spec">DWG-MB-2026 · REV C</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">Profile</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ────────────────────────────────── -->
+<section id="hero">
+
+  <!-- Background crosshair geometry -->
+  <div class="crosshair-bg" style="left: 50%; top: 50%; transform: translate(-50%,-50%);">
+    <svg width="700" height="700" viewBox="0 0 700 700" xmlns="http://www.w3.org/2000/svg">
+      <line x1="350" y1="0" x2="350" y2="700" stroke="#1A1410" stroke-width="0.5"/>
+      <line x1="0" y1="350" x2="700" y2="350" stroke="#1A1410" stroke-width="0.5"/>
+      <circle cx="350" cy="350" r="200" fill="none" stroke="#1A1410" stroke-width="0.5"/>
+      <circle cx="350" cy="350" r="100" fill="none" stroke="#1A1410" stroke-width="0.5" stroke-dasharray="4 4"/>
+      <circle cx="350" cy="350" r="320" fill="none" stroke="#1A1410" stroke-width="0.5" stroke-dasharray="2 6"/>
+      <!-- tick marks -->
+      <line x1="344" y1="150" x2="356" y2="150" stroke="#1A1410" stroke-width="0.7"/>
+      <line x1="344" y1="250" x2="356" y2="250" stroke="#1A1410" stroke-width="0.5"/>
+      <line x1="344" y1="450" x2="356" y2="450" stroke="#1A1410" stroke-width="0.5"/>
+      <line x1="344" y1="550" x2="356" y2="550" stroke="#1A1410" stroke-width="0.7"/>
+      <line x1="150" y1="344" x2="150" y2="356" stroke="#1A1410" stroke-width="0.7"/>
+      <line x1="250" y1="344" x2="250" y2="356" stroke="#1A1410" stroke-width="0.5"/>
+      <line x1="450" y1="344" x2="450" y2="356" stroke="#1A1410" stroke-width="0.5"/>
+      <line x1="550" y1="344" x2="550" y2="356" stroke="#1A1410" stroke-width="0.7"/>
+    </svg>
+  </div>
+
+  <!-- Exploded rocket drawing — top right -->
+
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">{placeholder: institution} · Mechanical Engineering · Class of {year}</div>
+
+    <div class="hero-name" style="opacity:0;animation:fadeUp 0.9s ease 0.35s both;">
+      MIRAH<br>
+      <span class="hero-name-ghost">BLANCHARD</span>
+    </div>
+
+    <div class="hero-sub">Mechanical Engineer · Tolerates zero slop · Ships things that work</div>
+
+    <div class="hero-specs">
+      <div class="spec-cell">
+        <div class="spec-label">Discipline</div>
+        <div class="spec-value">{Specialty}</div>
+        <div class="spec-tol">±0.000 deviation</div>
+      </div>
+      <div class="spec-cell">
+        <div class="spec-label">GPA / Status</div>
+        <div class="spec-value">{GPA}</div>
+        <div class="spec-tol">within spec</div>
+      </div>
+      <div class="spec-cell">
+        <div class="spec-label">Location</div>
+        <div class="spec-value">{City, ST}</div>
+        <div class="spec-tol">±12km nominal</div>
+      </div>
+      <div class="spec-cell">
+        <div class="spec-label">Availability</div>
+        <div class="spec-value">Summer 2026</div>
+        <div class="spec-tol" style="color:var(--red);">OPEN · SEEKING</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Revision table -->
+  <div class="hero-revision">
+    <table class="revision-table">
+      <tr><th>Rev</th><th>Description</th><th>Date</th></tr>
+      <tr><td>A</td><td>Initial release</td><td>2024-09</td></tr>
+      <tr><td>B</td><td>{placeholder milestone}</td><td>2025-01</td></tr>
+      <tr><td class="red">C</td><td class="red">Current · Open to offers</td><td>2026-05</td></tr>
+    </table>
+  </div>
+
+  <div class="hero-scroll" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">
+    <div class="scroll-arrow">
+      <svg width="10" height="10" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 3L5 7L8 3" fill="none" stroke="rgba(26,20,16,0.45)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <span class="scroll-label">Scroll to view</span>
+  </div>
+</section>
+
+<!-- ── ABOUT ──────────────────────────────── -->
+<section id="about">
+  <div class="about-grid">
+
+    <!-- Portrait -->
+    <div class="portrait-wrap reveal">
+      <div class="portrait-frame">
+        <div class="corner-mark tl"></div>
+        <div class="corner-mark tr"></div>
+        <div class="corner-mark bl"></div>
+        <div class="corner-mark br"></div>
+        <div class="portrait-placeholder">
+          <img src="mirahcostco.png" alt="Pod" object-fit="cover" style="width:100%;height:200%;">
+        </div>
+      </div>
+      <!-- Horizontal dimension -->
+      <div class="portrait-dim-h">
+        <div class="dim-tick-l"></div>
+        <div class="dim-line"></div>
+        <div class="dim-center">{photo width} · 3:4 aspect</div>
+        <div class="dim-line"></div>
+        <div class="dim-tick-r"></div>
+      </div>
+      <!-- Vertical dimension -->
+      <div class="portrait-dim-v">
+        <div class="dim-tick-l" style="width:8px;height:1px;"></div>
+        <div class="dim-line-v"></div>
+        <div class="dim-center-v">{photo height} · portrait</div>
+        <div class="dim-line-v"></div>
+        <div class="dim-tick-r" style="width:8px;height:1px;"></div>
+      </div>
+    </div>
+
+    <!-- Bio -->
+    <div>
+      <div class="reveal">
+        <p class="eyebrow">Subject specification — MB-2026-001</p>
+        <h2 class="section-heading">Profile</h2>
+        <div class="heading-rule" data-rev="REV C · APPROVED"></div>
+      </div>
+
+      <div class="about-bio reveal reveal-d1">
+        <p>I design systems that hold tolerance, survive load, and don't apologize for being correct. <em>{placeholder — her field / research focus / what she actually builds}.</em> If a dimension isn't called out, it's because I already know it.</p>
+        <p>{placeholder — second paragraph, projects she's proud of, research lab, team she leads, something she built that surprised people}.</p>
+      </div>
+
+      <!-- Spec table -->
+      <table class="spec-table reveal reveal-d2">
+        <thead>
+          <tr>
+            <th>Parameter</th>
+            <th>Nominal value</th>
+            <th>Tolerance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Institution</td>
+            <td>{University name}</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Degree</td>
+            <td>BS Mechanical Engineering</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Focus</td>
+            <td>{Robotics / Thermal / Manufacturing}</td>
+            <td>subject to revision</td>
+          </tr>
+          <tr>
+            <td>GPA</td>
+            <td>{3.X / 4.0}</td>
+            <td>+0.0 / −0.0</td>
+          </tr>
+          <tr>
+            <td>{favorite tool}</td>
+            <td>Proficient · preferred</td>
+            <td>±0 slop</td>
+          </tr>
+          <tr>
+            <td>Imperial units</td>
+            <td>Will use · does not endorse</td>
+            <td style="color:var(--red);">nonconformance noted</td>
+          </tr>
+          <tr>
+            <td>Status</td>
+            <td>Seeking Summer 2026 internship</td>
+            <td style="color:var(--red);">OPEN</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Skill bars -->
+      <div class="skills-wrap reveal reveal-d3">
+        <p class="eyebrow" style="margin-bottom:16px;">Capability index — per competency</p>
+        <div class="skill-row">
+          <div class="skill-head">
+            <span class="skill-name">{Software · e.g. SolidWorks}</span>
+            <span class="skill-val tolerance">97.2% · ±1.4</span>
+          </div>
+          <div class="skill-track"><div class="skill-fill" style="width:97%"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-head">
+            <span class="skill-name">{Simulation · e.g. ANSYS FEA}</span>
+            <span class="skill-val tolerance">91.0% · ±2.1</span>
+          </div>
+          <div class="skill-track"><div class="skill-fill" style="width:91%"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-head">
+            <span class="skill-name">{Fabrication · e.g. CNC Machining}</span>
+            <span class="skill-val tolerance">88.5% · ±1.8</span>
+          </div>
+          <div class="skill-track"><div class="skill-fill" style="width:88%"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-head">
+            <span class="skill-name">{Domain · e.g. Thermodynamics}</span>
+            <span class="skill-val tolerance">84.0% · ±2.5</span>
+          </div>
+          <div class="skill-track"><div class="skill-fill" style="width:84%"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-head">
+            <span class="skill-name">{Programming · e.g. MATLAB / Python}</span>
+            <span class="skill-val tolerance">79.3% · ±3.0</span>
+          </div>
+          <div class="skill-track"><div class="skill-fill" style="width:79%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── EXPERIENCE ─────────────────────────── -->
+<section id="experience">
+  <div class="exp-inner">
+    <div class="reveal" style="margin-bottom:56px;">
+      <p class="eyebrow">Professional record — field log</p>
+      <h2 class="section-heading">Experience</h2>
+      <div class="heading-rule" data-rev="3 entries · verified"></div>
+    </div>
+
+    <div class="timeline">
+
+      <div class="t-entry reveal" style="position:relative;">
+        <div class="t-node live"><div class="t-node-dot"></div></div>
+        <p class="t-period">{Month Year} — Present</p>
+        <h3 class="t-role">{Role title · e.g. Aerodynamics Team Lead}</h3>
+        <p class="t-org">{Organization · e.g. Formula SAE Team · University}</p>
+        <p class="t-desc">{placeholder — what she did, what she built, what improved because of her. Make it specific. Use a metric if you have one.}</p>
+        <div class="t-tags">
+          <span class="t-tag">{Tool 1}</span>
+          <span class="t-tag">{Tool 2}</span>
+          <span class="t-tag">{Domain}</span>
+          <span class="t-tag">Leadership</span>
+        </div>
+        <div class="callout-note">
+          <p class="callout-text">NOTE: <span class="callout-red">{funny annotation or metric here · e.g. "Reduced drag by 22% and didn't let anyone forget it"}</span></p>
+        </div>
+      </div>
+
+      <div class="t-entry reveal reveal-d1" style="position:relative;">
+        <div class="t-node live"><div class="t-node-dot"></div></div>
+        <p class="t-period">{Month Year} — Present</p>
+        <h3 class="t-role">{Role 2 · e.g. Undergraduate Researcher}</h3>
+        <p class="t-org">{Lab / Group · e.g. MEMS &amp; Microsystems Lab}</p>
+        <p class="t-desc">{placeholder — research description, what she fabricated, tested, measured, or modeled. What was the contribution?}</p>
+        <div class="t-tags">
+          <span class="t-tag">{Method}</span>
+          <span class="t-tag">{Equipment}</span>
+          <span class="t-tag">Research</span>
+        </div>
+        <div class="callout-note">
+          <p class="callout-text">SPEC: <span class="callout-red">{technical metric · e.g. "±0.5% linearity · wire-bonded and packaged"}</span></p>
+        </div>
+      </div>
+
+      <div class="t-entry reveal reveal-d2" style="position:relative;">
+        <div class="t-node"><div class="t-node-dot"></div></div>
+        <p class="t-period">{Month Year} — {Month Year}</p>
+        <h3 class="t-role">{Role 3 · e.g. Mechanical Engineering Intern}</h3>
+        <p class="t-org">{Company · Location · e.g. Fanuc America · Auburn Hills, MI}</p>
+        <p class="t-desc">{placeholder — internship description. What did she actually make or solve? What was approved for production?}</p>
+        <div class="t-tags">
+          <span class="t-tag">{Skill}</span>
+          <span class="t-tag">FEA</span>
+          <span class="t-tag">GD&amp;T</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── PROJECTS ────────────────────────────── -->
+<section id="projects">
+  <div class="proj-wrap">
+    <div class="reveal" style="margin-bottom:56px;">
+      <p class="eyebrow">Selected work — field dispatches</p>
+      <h2 class="section-heading">Projects</h2>
+      <div class="heading-rule" data-rev="4 entries · documented"></div>
+    </div>
+
+    <!-- Featured -->
+    <div class="proj-featured-row reveal">
+      <div class="proj-featured-drawing">
+        <svg viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg" style="width:90%;opacity:0.7;">
+          <!-- 6-DOF arm schematic, top view simplified -->
+          <line x1="60" y1="185" x2="60" y2="135" stroke="#1A1410" stroke-width="3" stroke-linecap="round"/>
+          <line x1="60" y1="135" x2="130" y2="90" stroke="#1A1410" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="130" y1="90" x2="205" y2="80" stroke="#1A1410" stroke-width="2" stroke-linecap="round"/>
+          <line x1="205" y1="80" x2="260" y2="100" stroke="#1A1410" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="260" y1="100" x2="295" y2="82" stroke="#1A1410" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="295" y1="82" x2="318" y2="88" stroke="#1A1410" stroke-width="1.2" stroke-linecap="round"/>
+          <!-- Joint circles -->
+          <circle cx="60" cy="185" r="9" fill="none" stroke="#1A1410" stroke-width="1.5"/>
+          <circle cx="60" cy="135" r="7" fill="none" stroke="#1A1410" stroke-width="1.2"/>
+          <circle cx="130" cy="90" r="6" fill="none" stroke="#1A1410" stroke-width="1.2"/>
+          <circle cx="205" cy="80" r="5" fill="none" stroke="#1A1410" stroke-width="1.2"/>
+          <circle cx="260" cy="100" r="4.5" fill="none" stroke="#1A1410" stroke-width="1"/>
+          <circle cx="295" cy="82" r="4" fill="none" stroke="#1A1410" stroke-width="1"/>
+          <circle cx="318" cy="88" r="3.5" fill="#C0392B" stroke="#C0392B" stroke-width="1"/>
+          <!-- Joint labels -->
+          <text x="46" y="196" font-family="'Share Tech Mono', monospace" font-size="8" fill="rgba(26,20,16,0.45)">J1</text>
+          <text x="46" y="130" font-family="'Share Tech Mono', monospace" font-size="8" fill="rgba(26,20,16,0.45)">J2</text>
+          <text x="118" y="82" font-family="'Share Tech Mono', monospace" font-size="8" fill="rgba(26,20,16,0.45)">J3</text>
+          <text x="205" y="68" font-family="'Share Tech Mono', monospace" font-size="8" fill="rgba(26,20,16,0.45)">J4</text>
+          <text x="260" y="117" font-family="'Share Tech Mono', monospace" font-size="8" fill="rgba(26,20,16,0.45)">J5</text>
+          <text x="290" y="70" font-family="'Share Tech Mono', monospace" font-size="8" fill="rgba(26,20,16,0.45)">J6</text>
+          <!-- Reach dimension -->
+          <line x1="60" y1="208" x2="295" y2="208" stroke="#1A1410" stroke-width="0.5"/>
+          <line x1="60" y1="202" x2="60" y2="214" stroke="#1A1410" stroke-width="0.5"/>
+          <line x1="295" y1="202" x2="295" y2="214" stroke="#1A1410" stroke-width="0.5"/>
+          <text x="177" y="205" text-anchor="middle" font-family="'Share Tech Mono', monospace" font-size="8" fill="rgba(192,57,43,0.6)">L = {reach} · ±0.8mm repeat.</text>
+          <!-- Axis label -->
+          <text x="30" y="30" font-family="'Share Tech Mono', monospace" font-size="9" fill="rgba(44,95,138,0.5)">6-DOF · SIDE VIEW</text>
+          <text x="30" y="42" font-family="'Share Tech Mono', monospace" font-size="8" fill="rgba(26,20,16,0.3)">DWG MB-ARM-001 · SCALE NTS</text>
+        </svg>
+      </div>
+      <div class="proj-featured-content">
+        <div class="corner-mark tl"></div>
+        <div class="corner-mark br"></div>
+        <p class="proj-num">作品 01 · FEATURED · DWG MB-ARM-001</p>
+        <h3 class="proj-title">{Project name · e.g. 6-DOF Robotic Arm}</h3>
+        <p class="proj-cat">{Category · e.g. Robotics · Kinematics · Controls}</p>
+        <p class="proj-desc">{placeholder — headline project. What she designed, what she had to solve, what the spec was, what the result was. Lead with the hardest part.}</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;">
+          <span class="t-tag">{Tool}</span>
+          <span class="t-tag">{Method}</span>
+          <span class="t-tag">{Language}</span>
+          <span class="t-tag">{Fabrication}</span>
+        </div>
+        <div class="proj-tol">{Key metric · e.g. "Repeatability: ±0.8mm · Workspace: {value}"}</div>
+      </div>
+    </div>
+
+    <!-- Grid of 3 -->
+    <div class="proj-grid">
+      <!-- Card 1 -->
+      <div class="proj-card reveal">
+        <p class="proj-num">作品 02 · DWG MB-{xxx}-002</p>
+        <div class="proj-drawing">
+          <svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:90%;opacity:0.65;">
+            <ellipse cx="130" cy="55" rx="85" ry="35" fill="none" stroke="#1A1410" stroke-width="1"/>
+            <ellipse cx="130" cy="55" rx="50" ry="20" fill="none" stroke="#1A1410" stroke-width="0.7"/>
+            <line x1="45" y1="55" x2="215" y2="55" stroke="#C0392B" stroke-width="0.5" stroke-dasharray="6 3 2 3"/>
+            <text x="130" y="98" text-anchor="middle" font-family="'Share Tech Mono', monospace" font-size="8" fill="rgba(192,57,43,0.5)">T_max = {value}°C</text>
+          </svg>
+        </div>
+        <h3 class="proj-title">{Project 2}</h3>
+        <p class="proj-cat">{Category · e.g. Thermal Engineering · FEA}</p>
+        <p class="proj-desc">{placeholder — concise project description. One constraint, one method, one result.}</p>
+        <div class="proj-tol">{Key metric · e.g. "Junction temp &lt; 45°C at peak load"}</div>
+      </div>
+      <!-- Card 2 -->
+      <div class="proj-card reveal reveal-d1">
+        <p class="proj-num">作品 03 · DWG MB-{xxx}-003</p>
+        <div class="proj-drawing">
+          <svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:90%;opacity:0.65;">
+            <rect x="30" y="25" width="200" height="65" fill="none" stroke="#1A1410" stroke-width="1" rx="2"/>
+            <rect x="50" y="38" width="46" height="39" fill="none" stroke="#1A1410" stroke-width="0.7"/>
+            <rect x="107" y="38" width="46" height="39" fill="none" stroke="#1A1410" stroke-width="0.7"/>
+            <rect x="164" y="38" width="46" height="39" fill="none" stroke="#1A1410" stroke-width="0.7"/>
+            <line x1="30" y1="14" x2="230" y2="14" stroke="#1A1410" stroke-width="0.5"/>
+            <line x1="30" y1="10" x2="30" y2="18" stroke="#1A1410" stroke-width="0.5"/>
+            <line x1="230" y1="10" x2="230" y2="18" stroke="#1A1410" stroke-width="0.5"/>
+            <text x="130" y="11" text-anchor="middle" font-family="'Share Tech Mono', monospace" font-size="8" fill="rgba(192,57,43,0.5)">{overall dim} ±0.05</text>
+          </svg>
+        </div>
+        <h3 class="proj-title">{Project 3}</h3>
+        <p class="proj-cat">{Category · e.g. Microsystems · Cleanroom}</p>
+        <p class="proj-desc">{placeholder — what she fabricated, what the process was, what she measured.}</p>
+        <div class="proj-tol">{Key spec · e.g. "Linearity error: ±0.5% across 0–100 kPa"}</div>
+      </div>
+      <!-- Card 3 -->
+      <div class="proj-card reveal reveal-d2">
+        <p class="proj-num">作品 04 · DWG MB-{xxx}-004</p>
+        <div class="proj-drawing">
+          <svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:90%;opacity:0.65;">
+            <path d="M30,95 Q130,28 230,95" fill="none" stroke="#1A1410" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M40,95 Q130,10 220,95" fill="none" stroke="#1A1410" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round"/>
+            <line x1="30" y1="95" x2="230" y2="95" stroke="#1A1410" stroke-width="0.8"/>
+            <line x1="130" y1="30" x2="130" y2="95" stroke="#C0392B" stroke-width="0.5" stroke-dasharray="3 2"/>
+            <text x="134" y="65" font-family="'Share Tech Mono', monospace" font-size="8" fill="rgba(192,57,43,0.5)">CL = {value}</text>
+            <text x="130" y="108" text-anchor="middle" font-family="'Share Tech Mono', monospace" font-size="8" fill="rgba(26,20,16,0.4)">{chord length} · NACA {xxxx}</text>
+          </svg>
+        </div>
+        <h3 class="proj-title">{Project 4}</h3>
+        <p class="proj-cat">{Category · e.g. Aerodynamics · Composites}</p>
+        <p class="proj-desc">{placeholder — what she designed and built. Airfoil, wing, manifold — whatever it is.}</p>
+        <div class="proj-tol">{Key output · e.g. "{force}N downforce at {speed} km/h"}</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── CONTACT ─────────────────────────────── -->
+<section id="contact">
+  <div class="contact-ghost">MB</div>
+  <div class="contact-inner reveal">
+    <p class="eyebrow">Base camp — establish contact</p>
+    <h2 class="contact-heading">
+      LET'S<br> TALK
+    </h2>
+    <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--red);letter-spacing:0.2em;margin-bottom:0;">
+      STATUS: OPEN · REV C · SUMMER 2026
+    </div>
+    <p class="contact-body">
+      {placeholder — her pitch. What she's looking for, what kind of problems she wants to work on, what she brings that no one else does.} I care about tolerances, systems thinking, and building things that actually work.
+    </p>
+    <div class="contact-ctas">
+      <a href="mailto:{email}" class="cta-primary">✉ {email@school.edu}</a>
+      <a href="#" class="cta-secondary">LinkedIn</a>
+      <a href="#" class="cta-secondary">Resume PDF</a>
+    </div>
+
+    <!-- annotation note -->
+    <div style="margin-top:40px;padding:14px 18px;border:1px solid var(--pencil-dim);display:inline-block;max-width:480px;">
+      <p style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--pencil-dim);line-height:1.8;letter-spacing:0.07em;">
+        DESIGN NOTE: {placeholder inside joke · e.g. "This portfolio was built to spec. Tolerances held. No fillet radii were harmed in the making of this page."}<br>
+        CHECKED BY: {your name here} · DATE: {date} · APPROVED: ✓
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ──────────────────────────────── -->
+<footer>
+  <span class="footer-id">© 2026 · Mirah Blanchard · DWG-MB-2026-001 · REV C · All dimensions in mm unless noted</span>
+  <ul class="footer-links">
+    <li><a href="#">Email</a></li>
+    <li><a href="#">LinkedIn</a></li>
+    <li><a href="#">Resume</a></li>
+  </ul>
+</footer>
+
+<script>
+  const nav = document.getElementById('main-nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
+
+  const ro = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+</script>
+</body>
+</html>
